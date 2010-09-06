@@ -7,9 +7,9 @@ if len(sys.argv) <= 1:
 	print 'Usage: %s training_file [testing_file]' % sys.argv[0]
 	raise SystemExit
 
-svmtrain_exe = sys.path[0]+'svm_linear-train'
-svmpredict_exe = sys.path[0]+'/home/papa/src/libmachinelearning/svm_linear-predict'
-grid_py = sys.path[0]+'home/papa/src/libmachinelearning/grid_linear.py'
+svmtrain_exe = sys.path[0]+'/svm_linear-train'
+svmpredict_exe = sys.path[0]+'/svm_linear-predict'
+grid_py = sys.path[0]+'/grid_linear.py'
 
 assert os.path.exists(svmtrain_exe),"svm-train executable not found"
 assert os.path.exists(svmpredict_exe),"svm-predict executable not found"

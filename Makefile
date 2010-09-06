@@ -75,4 +75,5 @@ fann:
 
 clean:
 	cd blas; make clean
+	cd fann-2.0.0; make clean
 	rm -f *~ svm-train svm-predict svm.o mysvm statistics src/svm.o svm_linear-train svm_linear-predict tron.o linear.o ann-mlp ann-rbf kohonen knn bayes opf2svm opf2lasvm opf2ann
