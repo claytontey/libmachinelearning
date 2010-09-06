@@ -1,0 +1,125 @@
+#!/bin/bash
+
+#P1: input directory with datasets
+#P2: normalize features? 1 - Yes  0 - No
+#P3: running times
+
+for file in $1*.opf
+do
+	echo $file
+
+	for ((p = 4; p < 10; p++))
+	do
+
+        training_percentage=$(echo "($p)/10" | bc -l)
+        testing_percentage=$(echo "1-$training_percentage" | bc -l)
+
+        for ((it = 1; it <= $3; it++))
+        do
+            clear
+
+            #generating sets *****
+            opf_split $file $training_percentage 0 $testing_percentage $2
+
+            #converting sets to LibSVM format *****
+            ./opf2svm training.dat training.svm
+            ./opf2svm testing.dat testing.svm
+            cp training.svm training.svm.no-kernel
+            cp testing.svm testing.svm.no-kernel
+            cp training.svm training.svm.linear
+            cp testing.svm testing.svm.linear
+            cp training.svm training.svm.sigmoid-kernel
+            cp testing.svm testing.svm.sigmoid-kernel
+
+            #converting sets to LASVM format *****
+            ./opf2lasvm training.dat training.lasvm
+            ./opf2lasvm testing.dat testing.lasvm
+
+            #converting sets to FANN format *****
+            ./opf2ann training.dat training.ann
+            ./opf2ann testing.dat testing.ann
+
+            #executing OPF *****
+            opf_train training.dat
+            opf_accuracy training.dat
+            opf_classify testing.dat
+            opf_accuracy testing.dat
+
+            #executing SVM with RBF kernel *****
+            ./mysvm training.svm testing.svm 2
+            cp testing.dat testing.svm
+            mv testing.svm.predict testing.svm.out
+            opf_accuracy testing.svm
+
+            #executing SVM with no kernel *****
+            #./mysvm training.svm.no-kernel testing.svm.no-kernel -1
+            #cp testing.dat testing.svm.no-kernel
+            #mv testing.svm.no-kernel.predict testing.svm.no-kernel.out
+            #opf_accuracy testing.svm.no-kernel
+
+            #executing SVM with linear kernel *****
+            #./mysvm training.svm.linear testing.svm.linear 0
+            #cp testing.dat testing.svm.linear
+            #mv testing.svm.linear.predict testing.svm.linear.out
+            #opf_accuracy testing.svm.linear
+
+            #executing SVM with sigmoid kernel *****
+            #./mysvm training.svm.sigmoid-kernel testing.svm.sigmoid-kernel 3
+            #cp testing.dat testing.svm.sigmoid-kernel
+            #mv testing.svm.sigmoid-kernel.predict testing.svm.sigmoid-kernel.out
+            #opf_accuracy testing.svm.sigmoid-kernel
+
+            #executing LASVM with RBF kernel *****
+            #./lasvm-source/la_svm training.lasvm
+            #./lasvm-source/la_test -B 0 testing.lasvm training.lasvm.model testing.lasvm.out
+            #cp testing.dat testing.lasvm
+            #opf_accuracy testing.lasvm
+
+            #executing ANN-MLP *****
+            ./ann-mlp training.ann testing.ann
+            cp testing.dat testing.ann
+            mv testing.ann.predict testing.ann.out
+            opf_accuracy testing.ann
+
+            #executing SOM (Kohonen)
+            cp training.dat training.som
+            cp testing.dat testing.som
+            ./kohonen training.som testing.som 100 10
+            mv testing.som.predict testing.som.out
+            opf_accuracy testing.som
+
+            #executing k-NN
+            #cp training.dat training.knn
+            #cp testing.dat testing.knn
+            #./knn training.knn testing.knn
+            #mv testing.knn.predict testing.knn.out
+            #opf_accuracy testing.knn
+
+            #executing Bayes
+            cp training.dat training.bay
+            cp testing.dat testing.bay
+            ./bayes training.bay testing.bay
+            mv testing.bay.predict testing.bay.out
+            opf_accuracy testing.bay
+
+            rm *.opf *.svm  *.model *.out *.no-kernel *.ann *.som *.knn *.lasvm *.sigmoid-kernel *.bay *.linear *.dat
+
+            sleep 2
+        done
+
+        echo $file.opf.$p.stt
+        ./statistics testing.dat.acc training.dat.time testing.dat.time $file.opf.$p.stt $3
+        ./statistics testing.svm.acc training.svm.time testing.svm.time $file.svm.$p.stt $3
+        #./statistics testing.svm.no-kernel.acc training.svm.no-kernel.time testing.svm.no-kernel.time $file.svm.no-kernel.$p.stt $3
+        #./statistics testing.svm.linear.acc training.svm.linear.time testing.svm.linear.time $file.svm.linear.$p.stt $3
+        #./statistics testing.svm.sigmoid-kernel.acc training.svm.sigmoid-kernel.time testing.svm.sigmoid-kernel.time file.svm.sigmoid-kernel.$p.stt $3
+        #./statistics testing.lasvm.acc training.lasvm.time testing.lasvm.time $file.lasvm.$p.stt $3
+        ./statistics testing.ann.acc training.ann.time testing.ann.time $file.ann.$p.stt $3
+        ./statistics testing.som.acc training.som.time testing.som.time $file.som.$p.stt $3
+        #./statistics testing.knn.acc training.knn.time testing.knn.time $file.knn.$p.stt $3
+        ./statistics testing.bay.acc training.bay.time testing.bay.time $file.bay.$p.stt $3
+
+        rm *.time *.acc
+    done;
+
+done

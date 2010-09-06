@@ -1,0 +1,6 @@
+How to use
+
+Set OPF_DIR variable
+Instalar fannlib
+Set PATH variable with OPF_DIR/bin
+configurar easy.py e easy_linear.py

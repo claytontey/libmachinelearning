@@ -1,0 +1,155 @@
+#!/bin/bash
+
+#P1: input directory with datasets
+#P2: normalize features? 1 - Yes  0 - No
+#P3: number of folds
+
+for file in $1*.opf
+do
+	echo $file
+	opf_fold $file $3 $2
+
+	for ((it = 1; it <= $3; it++))
+	do
+		#executing OPF classifier *****************
+		cp fold_$it.dat training.dat
+		opf_train training.dat
+		for ((it2 = 1; it2 <= $3; it2++))
+		do
+			if [ "$it" -ne "$it2" ]; then
+				cp fold_$it2.dat testing.dat
+				opf_classify testing.dat
+				opf_accuracy testing.dat
+			fi
+		done
+
+		#executing SVM with RBF kernel *****
+		./opf2svm fold_$it.dat training.svm
+		for ((it2 = 1; it2 <= $3; it2++))
+		do
+			if [ "$it" -ne "$it2" ]; then
+				./opf2svm fold_$it2.dat testing.svm
+				./mysvm training.svm testing.svm 2
+				cp fold_$it2.dat testing.svm
+				mv testing.svm.predict testing.svm.out
+				opf_accuracy testing.svm
+
+			fi
+		done
+
+		#executing SVM with no kernel *****
+		./opf2svm fold_$it.dat training.svm.no-kernel
+		for ((it2 = 1; it2 <= $3; it2++))
+		do
+			if [ "$it" -ne "$it2" ]; then
+				./opf2svm fold_$it2.dat testing.svm.no-kernel
+				./mysvm training.svm.no-kernel testing.svm.no-kernel -1
+				cp fold_$it2.dat testing.svm.no-kernel
+				mv testing.svm.no-kernel.predict testing.svm.no-kernel.out
+				opf_accuracy testing.svm.no-kernel
+
+			fi
+		done
+
+		#executing SVM with linear kernel *****
+		./opf2svm fold_$it.dat training.svm.linear-kernel
+		for ((it2 = 1; it2 <= $3; it2++))
+		do
+			if [ "$it" -ne "$it2" ]; then
+				./opf2svm fold_$it2.dat testing.svm.linear-kernel
+				./mysvm training.svm.linear-kernel testing.svm.linear-kernel 0
+				cp fold_$it2.dat testing.svm.linear-kernel
+				mv testing.svm.linear-kernel.predict testing.svm.linear-kernel.out
+				opf_accuracy testing.svm.linear-kernel
+
+			fi
+		done
+
+        echo "SIGMOIDE ******************"
+		#executing SVM with sigmoid kernel *****
+		./opf2svm fold_$it.dat training.svm.sigmoid-kernel
+		for ((it2 = 1; it2 <= $3; it2++))
+		do
+			if [ "$it" -ne "$it2" ]; then
+				./opf2svm fold_$it2.dat testing.svm.sigmoid-kernel
+				./mysvm training.svm.sigmoid-kernel testing.svm.sigmoid-kernel 3
+				cp fold_$it2.dat testing.svm.sigmoid-kernel
+				mv testing.svm.sigmoid-kernel.predict testing.svm.sigmoid-kernel.out
+				opf_accuracy testing.svm.sigmoid-kernel
+
+			fi
+		done
+
+		#executing ANN-MLP *****
+		./opf2ann fold_$it.dat training.ann
+		for ((it2 = 1; it2 <= $3; it2++))
+		do
+			if [ "$it" -ne "$it2" ]; then
+				./opf2ann fold_$it2.dat testing.ann
+				./ann-mlp training.ann testing.ann
+				cp fold_$it2.dat testing.ann
+				mv testing.ann.predict testing.ann.out
+				opf_accuracy testing.ann
+
+			fi
+		done
+
+
+		#executing SOM (Kohonen)
+		cp fold_$it.dat training.som
+		for ((it2 = 1; it2 <= $3; it2++))
+		do
+			if [ "$it" -ne "$it2" ]; then
+				cp fold_$it2.dat testing.som
+				./kohonen training.som testing.som 100 10
+				cp fold_$it2.dat testing.som
+				mv testing.som.predict testing.som.out
+				opf_accuracy testing.som
+			fi
+		done
+
+		#executing kNN
+		cp fold_$it.dat training.knn
+		for ((it2 = 1; it2 <= $3; it2++))
+		do
+			if [ "$it" -ne "$it2" ]; then
+				cp fold_$it2.dat testing.knn
+				./knn training.knn testing.knn
+				cp fold_$it2.dat testing.knn
+				mv testing.knn.predict testing.knn.out
+				opf_accuracy testing.knn
+			fi
+		done
+
+		#executing Bayes
+		cp fold_$it.dat training.bay
+		for ((it2 = 1; it2 <= $3; it2++))
+		do
+			if [ "$it" -ne "$it2" ]; then
+				cp fold_$it2.dat testing.bay
+				./bayes training.bay testing.bay
+				cp fold_$it2.dat testing.bay
+				mv testing.bay.predict testing.bay.out
+				opf_accuracy testing.bay
+			fi
+		done
+
+	done
+
+	rm *.opf *.svm  *.model *.out *.linear-kernel *.no-kernel *.sigmoid-kernel *.ann *.som *.dat *.knn *.bay
+
+	x=$(echo "$3*($3-1)" | bc)
+
+	./statistics testing.dat.acc training.dat.time testing.dat.time $file.opf.stt $x
+	./statistics testing.svm.acc training.svm.time testing.svm.time $file.svm.stt $x
+	./statistics testing.svm.no-kernel.acc training.svm.no-kernel.time testing.svm.no-kernel.time $file.svm.no-kernel.stt $x
+	./statistics testing.svm.linear-kernel.acc training.svm.linear-kernel.time testing.svm.linear-kernel.time $file.svm.linear-kernel.stt $x
+	./statistics testing.svm.sigmoid-kernel.acc training.svm.sigmoid-kernel.time testing.svm.sigmoid-kernel.time $file.svm.sigmoid-kernel.stt $x
+	./statistics testing.ann.acc training.ann.time testing.ann.time $file.ann.stt $x
+	./statistics testing.som.acc training.som.time testing.som.time $file.som.stt $x
+	./statistics testing.knn.acc training.knn.time testing.knn.time $file.knn.stt $x
+	./statistics testing.bay.acc training.bay.time testing.bay.time $file.bay.stt $x
+
+	rm *.time *.acc
+
+done

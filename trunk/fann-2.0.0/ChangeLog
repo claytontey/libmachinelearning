@@ -1,0 +1,98 @@
+libfann (2.0.0) stable; urgency=low
+	* Added Delphi bindings
+	* Cascade training
+	* Momentum parameter
+	* Steepness and activation function available for single neurons
+	* New documentation
+	* Removed some depricated functions
+	* New set of fann_create functions
+	* Altered the way the callback function works
+	* Training can be stopped by counting the number of datasets that fail instead of just MSE
+	* Fixed a memory leak when copying training data
+	* More activation functions
+	* Enums used instead of integers for several parameters.
+	* Possebility to set default logging facility
+	* All parameters are saved to configuration file and not just the parameters needed to execute the ANN
+	* More readable configuration file
+	* Visual Studio .Net Project Files
+	* Borland C++ Builder 6.0 Project files
+
+ -- Steffen Nissen <sn@leenissen.dk> Fri, 06 Jan 2006 23:13:30 +0100
+	
+libfann (1.2.0) stable; urgency=low
+	* Fixes for better compability with different compilers
+	* Shortcut connections that skip layers
+	* Changed version of save fileformat
+	* fann_print_connections function
+	* More activation functions
+	* Batch training
+	* RPROP training (default)
+	* Quickprop training
+	* fann_get_training_algorithm and fann_set_training_algorithm functions
+	* fann_test_data function
+	* fann_print_parameters function
+	* Renamed some functions and variables to avoid confusion of terms (kept deprecated functions)
+	
+ -- Steffen Nissen <lukesky@diku.dk> Sat, 09 Oct 2004 11:13:22 +0200
+
+libfann (1.1.0) stable; urgency=low
+	* Error checking when allocating memory
+	* Debian package
+	* RPM package
+	* Added pkg-config
+	* Deallocate correctly in case of an error
+	* Renamed fann_get_error to fann_get_MSE (keeping old one for now)
+	* Renamed fann_reset_error to fann_reset_MSE (keeping old one for now)
+	* Rearanged some code for easy access by the newly created fann php module 
+	* Defined more activation functions and documented the old (in fann_activation.h)
+	* Customize error output
+	* Added fann_set_error_log, fann_shuffle_train_data, fann_merge_train_data, and fann_duplicate_train_data, fann_init_weights
+	* Added python bindings
+	* Created DocBook XML documentation, including API reference
+	* Rearanged files for easier development
+	* Added MSVC++ project files
+	
+ -- Steffen Nissen <lukesky@diku.dk> Wed, 31 Mar 2004 21:19:32 +0200
+
+libfann (1.0.5) stable; urgency=low
+	* Added a new constructor
+	* Added a callback function for output during training
+	* Changed compile parameters for further performance
+	* Error value not set to zero after training
+	* Thanks to Evan Nemerson for some of these patches
+
+ -- Steffen Nissen <lukesky@diku.dk>  Tue, 06 Jan 2004 20:51:34 +0100
+	
+libfann (1.0.4) stable; urgency=high
+	* Bugfix concerning default activation function
+	
+ -- Steffen Nissen <lukesky@diku.dk>  Thu, 11 Dec 2003 12:42:41 +0100
+	
+libfann (1.0.3) stable; urgency=low
+	* Added FANN_SIGMOID_STEPWISE activation function (faster)
+	* Moved files around and altered some files for easyer benchmarking
+	* Added a benchmark pdf file, benchmarking the new behavior.
+	* Better compability with non gnu compilers (should work off the shelf)
+	
+ -- Steffen Nissen <lukesky@diku.dk>  Tue, 09 Dec 2003 23:30:45 +0100
+	
+libfann (1.0.2) stable; urgency=low
+	* Added configure script
+	* Moved files around, to make the transition to configure more easy
+	* Removed other versions of documentation than pdf
+	
+ -- Steffen Nissen <lukesky@diku.dk>  Thu, 13 Nov 2003 11:06:47 +0100
+	
+libfann (1.0.1) stable; urgency=high
+	* Bugfix concerning steepness parameter
+	* Moved some files around
+	* Added the changelog
+	
+ -- Steffen Nissen <lukesky@diku.dk>  3 Nov 2003
+	
+libfann (1.0) stable; urgency=high
+	* Initial release of full functioning library
+	
+ -- Steffen Nissen <lukesky@diku.dk>  1 Nov 2003
+	
+

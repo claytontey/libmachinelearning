@@ -1,0 +1,17 @@
+This python binding is provided by Vincenzo Di Massa <hawk.it@tiscalinet.it>
+and Gil Megidish <gil@megidish.net>
+
+DESCRIPTION
+Using this wrapper it is possible to use libfann from python scripts.
+
+USAGE
+Just import pyfan.fann.
+
+TESTING
+To test the python bindings type 
+$ make test
+to build the library and execute example scripts in the example directory.
+
+BUILDING
+see INSTALL
+

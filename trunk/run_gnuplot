@@ -1,0 +1,21 @@
+for file in *.stt;
+do
+	./generatetxtfile4gnu $file;
+done;
+
+ls *.accuracy.gnudat >> temp.tmp~
+./assemblegnufile temp.tmp 1
+rm temp.tmp~
+gnuplot accuracy.gnu
+
+ls *.training-time.gnudat >> temp.tmp~
+./assemblegnufile temp.tmp 2
+rm temp.tmp~
+gnuplot training-time.gnu
+
+ls *.testing-time.gnudat >> temp.tmp~
+./assemblegnufile temp.tmp 3
+rm temp.tmp~
+gnuplot testing-time.gnu
+
+rm *.gnudat
