@@ -8,7 +8,7 @@ if len(sys.argv) <= 1:
 	raise SystemExit
 
 svmtrain_exe = sys.path[0]+'/svm-train'
-svmpredict_exe = sys.path[0]+'svm-predict'
+svmpredict_exe = sys.path[0]+'/svm-predict'
 grid_py = sys.path[0]+'/grid.py'
 
 assert os.path.exists(svmtrain_exe),"svm-train executable not found"
