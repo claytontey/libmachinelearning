@@ -1,4 +1,4 @@
-#! /bin/bash
+#! /bin/sh
 
 # libtoolT - Provide generalized library-building support services.
 # Generated automatically by  (GNU fann 2.0.0)
@@ -47,7 +47,7 @@ available_tags=" CXX"
 # Libtool was configured on host papa-server:
 
 # Shell to use when invoking shell scripts.
-SHELL="/bin/bash"
+SHELL="/bin/sh"
 
 # Whether or not to build shared libraries.
 build_libtool_libs=yes
@@ -6890,7 +6890,7 @@ build_old_libs=`case $build_libtool_libs in yes) $echo no;; *) $echo yes;; esac`
 # Libtool was configured on host papa-server:
 
 # Shell to use when invoking shell scripts.
-SHELL="/bin/bash"
+SHELL="/bin/sh"
 
 # Whether or not to build shared libraries.
 build_libtool_libs=yes
