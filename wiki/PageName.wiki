@@ -2,7 +2,7 @@
 
 = Introduction =
 
-This project contains several supervised classifiers implemented in C/C++ languages, as follows:
+This project contains several supervised classifiers implemented in C/C++ language, as follows:
 * Optimum-Path Forest (OPF)
 * Artificial Neural Networks with Multilayer Perceptron (ANN-MLP) by FANN
 * Support Vector Machines (SVM) with RBF, Sigmoid and Linear kernels by LibSVM
