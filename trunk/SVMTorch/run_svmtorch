@@ -1,0 +1,60 @@
+#!/bin/bash
+
+#P1: input directory with datasets
+#P2: percentage for the training set size [0,1]
+#P3: percentage for the test set size [0,1]
+#P4: percentage for pruning
+#P5: normalize features? 1 - Yes  0 - No
+#P6: running times
+#P7: multiclass 1 - Yes 0 - No
+#P8: percentage for pruning
+rm output.tex
+echo "\\documentclass[8pt]{article}" >> output.tex
+echo "\\usepackage[left=2cm,top=1cm,right=3cm,nohead,nofoot]{geometry}" >> output.tex
+echo "\\begin{document}" >> output.tex
+echo "\\begin{center}" >> output.tex
+echo "\\begin{tabular}{|l|l|l|l|l|l|l|}" >> output.tex
+echo "\\hline" >> output.tex
+echo "\$classifier\$&\$base\$&\$acc\$&\$trainingtime\$&\$testingtime\$&\$pruningtime\$\\\\" >> output.tex
+for file in $1*.dat
+do
+	echo $file
+		
+	for ((it = 1; it <= $6; it++))
+	do
+		clear
+	        #generating sets *****
+	        ../opf_split $file $2 $4 $3 $5
+	 	
+		../opf_pruning training.dat evaluating.dat $8
+		
+		if [ $7 -eq 1 ]; then
+			#./opf2svmtorch training.dat $file.in 1
+			../opf2svmtorch training.pruning.dat $file.in 1
+			../opf2svmtorch testing.dat $file.test 1
+			./SVMTorch -multi $file.in $file.model
+			./SVMTest -multi -oa predict $file.model $file.test
+		else
+			#./opf2svmtorch training.dat $file.in
+			../opf2svmtorch training.pruning.dat $file.in
+			../opf2svmtorch testing.dat $file.test
+			./SVMTorch $file.in $file.model
+			./SVMTest $file.model $file.test
+		fi
+		
+		
+	done
+	
+	cp testing.dat testing.svmtorch
+	mv -v predict testing.svmtorch.out
+	../opf_accuracy testing.svmtorch
+	../statistics testing.svmtorch.acc training.time testing.time output.tex $6 $file svmtorch+pruning training.dat.time.pruning
+	rm evaluating.* training.* testing.* accuracy $file.*
+done
+
+echo "\\hline" >> output.tex
+echo "\\end{tabular}" >> output.tex
+echo "\\end{center}" >> output.tex
+echo "\\end{document}" >> output.tex
+
+
