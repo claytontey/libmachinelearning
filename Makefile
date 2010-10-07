@@ -1,14 +1,13 @@
 CFLAGS=-Wall -O3 -Wconversion -fPIC
 CC=gcc
-CXXC=g++ -Wall
-FLAGS=-O3 -Wall
+CXXC=g++ -Wall -march=native
+FLAGS=-O3 -Wall -march=native
 BLASLIB=blas/blas.a
-#FANNLIB=/usr/local/lib/libfann.a
 IFLAGS=-I$(OPF_DIR)/include -I$(OPF_DIR)/include/util 
 FANN=$(PWD)/fann-2.0.0
 FANNLIB=$(FANN)/lib/libfann.a
 
-all: fann libopf svm-train svm-predict svm.o svm_linear-train svm_linear-predict tron.o linear.o blas/blas.a mysvm ann-mlp kohonen knn statistics opf2svm opf2lasvm opf2ann bayes assemblegnufile generatetxtfile4gnu
+all: libopf svm-train svm-predict svm.o svm_linear-train svm_linear-predict tron.o linear.o blas/blas.a mysvm ann-mlp kohonen knn statistics opf2svm opf2lasvm opf2ann bayes assemblegnufile generatetxtfile4gnu svmtorch opf2svmtorch fann 
 
 libopf:
 	$(MAKE) $(OPF_DIR)
@@ -37,7 +36,7 @@ linear.o: src/linear.cpp src/linear.h
 blas/blas.a:
 	cd blas; make OPTFLAGS='$(CFLAGS)' CC='$(CC)';
 
-mysvm: libopf
+mysvm: 
 	$(CC) -w $(FLAGS) $(IFLAGS) src/mysvm.c -L$(OPF_DIR)/lib -o mysvm -lm -lOPF
 
 ann-mlp: src/ann-mlp.c
@@ -46,22 +45,22 @@ ann-mlp: src/ann-mlp.c
 statistics:
 	$(CC) -w $(FLAGS) src/statistics.c -L$(OPF_DIR)/lib -lOPF -o statistics  -lm
 
-opf2svm: libopf
+opf2svm:
 	$(CC) -w $(FLAGS) $(IFLAGS) src/opf2svm.c -L$(OPF_DIR)/lib -lOPF -o opf2svm  -lm
 
-opf2lasvm: libopf
+opf2lasvm:
 	$(CC) -w $(FLAGS) $(IFLAGS) src/opf2lasvm.c -L$(OPF_DIR)/lib -lOPF -o opf2lasvm  -lm
 
-kohonen: libopf
+kohonen:
 	$(CC) -w $(FLAGS) $(IFLAGS) src/kohonen.c -L$(OPF_DIR)/lib -lOPF -o kohonen  -lm
 
-knn: libopf
+knn:
 	$(CC) -w $(FLAGS) $(IFLAGS) src/knn.c -L$(OPF_DIR)/lib -lOPF -o knn  -lm
 
-opf2ann: libopf
+opf2ann: 
 	$(CC) -w $(FLAGS) $(IFLAGS) src/opf2ann.c -L$(OPF_DIR)/lib -lOPF -o opf2ann  -lm
 
-bayes: libopf
+bayes:
 	$(CC) -w $(FLAGS) $(IFLAGS) src/bayes.c -L$(OPF_DIR)/lib -lOPF -o bayes  -lm
 
 assemblegnufile:
@@ -71,9 +70,19 @@ generatetxtfile4gnu:
 	$(CC) utils/src/generatetxtfile4gnu.c -o utils/generatetxtfile4gnu
 
 fann:
-	cd fann-2.0.0; make distclean; /bin/bash configure --prefix=$(FANN) --exec-prefix=$(FANN) --program-prefix=$(FANN); make; make install; exit;
+	cd fann-2.0.0; /bin/bash configure --prefix=$(PWD) --exec-prefix=$(PWD) --program-prefix=$(PWD); make; make install;
+
+lasvm:
+	cd lasvm-source; make;
+
+opf2svmtorch:
+	$(CC) -w $(FLAGS) $(IFLAGS) src/opf2svmtorch.c -L$(OPF_DIR)/lib -lOPF -o opf2svmtorch  -lm
+
+svmtorch:
+	cd SVMTorch; make;
 
 clean:
-	cd blas; make clean
-	cd fann-2.0.0; make clean
-	rm -f *~ svm-train svm-predict svm.o mysvm statistics src/svm.o svm_linear-train svm_linear-predict tron.o linear.o ann-mlp ann-rbf kohonen knn bayes opf2svm opf2lasvm opf2ann
+	cd blas; make clean;
+	cd fann-2.0.0; make distclean;
+	cd SVMTorch; make clean;
+	rm -f *~ opf2svmtorch svm-train svm-predict svm.o mysvm statistics src/svm.o svm_linear-train svm_linear-predict tron.o linear.o ann-mlp ann-rbf kohonen knn bayes opf2svm opf2lasvm opf2ann
