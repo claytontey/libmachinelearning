@@ -81,7 +81,9 @@ void ClassifyKnn(Subgraph *Train, Subgraph *Test, char TrainingMode){
 		InitializeKNN(v);
 		for (j = 0; j < Train->nnodes; j++){
 			if (((TrainingMode) && (i != j)) || !TrainingMode){
-				dist = opf_EuclDist(Test->node[i].feat, Train->node[j].feat, Test->nfeats);
+			    if(!opf_PrecomputedDistance)
+                    dist = opf_EuclDist(Test->node[i].feat, Train->node[j].feat, Test->nfeats);
+                else dist = opf_DistanceValue[Train->node[j].position][Test->node[i].position];
 				SortNeighbours(v, Train->node[j].truelabel, dist);
 			}
 		}
@@ -108,10 +110,11 @@ void TrainKnn(Subgraph *g){
 }
 
 int main(int argc, char **argv){
-	if(argc != 3){
+	if((argc != 4) && (argc != 3)){
 		fprintf(stderr,"\nusage knn <P1> <P2>\n");
 		fprintf(stderr,"\nP1: training set (OPF format)");
 		fprintf(stderr,"\nP2: test set (OPF format)");
+		fprintf(stderr, "\nP3: precomputed distance file (leave it in blank if you are not using this resource)\n");
 		return -1;
 	}
 
@@ -120,7 +123,12 @@ int main(int argc, char **argv){
 	double trainingtime, testingtime;
 	FILE *f = NULL;
 	timer tic, toc;
-	int i;
+	int i, n;
+
+	if(argc == 4) opf_PrecomputedDistance = 1;
+
+	if(opf_PrecomputedDistance)
+		opf_DistanceValue = opf_ReadDistances(argv[3], &n);
 
 	/*Training ***/
 	fprintf(stdout, "\nTraining Knn ..."); fflush(stdout);
@@ -156,6 +164,11 @@ int main(int argc, char **argv){
 	fprintf(stdout, "\nDeallocating memory ..."); fflush(stdout);
 	DestroySubgraph(&Train);
 	DestroySubgraph(&Test);
+	if(opf_PrecomputedDistance){
+		for (i = 0; i < n; i++)
+			free(opf_DistanceValue[i]);
+		free(opf_DistanceValue);
+	}
 	fprintf(stdout, " OK"); fflush(stdout);
 
 	return 0;
