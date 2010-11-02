@@ -1,5 +1,5 @@
-prefix=/home/papa/src/libmachinelearning
-exec_prefix=/home/papa/src/libmachinelearning
+prefix=/home/papa/src/libmachinelearning/fann-2.0.0
+exec_prefix=/home/papa/src/libmachinelearning/fann-2.0.0
 libdir=${exec_prefix}/lib
 includedir=${prefix}/include
  

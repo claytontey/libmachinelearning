@@ -5,12 +5,17 @@ FLAGS=-O3 -Wall -march=native
 BLASLIB=blas/blas.a
 IFLAGS=-I$(OPF_DIR)/include -I$(OPF_DIR)/include/util 
 FANN=$(PWD)/fann-2.0.0
-FANNLIB=$(FANN)/lib/libfann.a
 
-all: libopf svm-train svm-predict svm.o svm_linear-train svm_linear-predict tron.o linear.o blas/blas.a mysvm ann-mlp kohonen knn statistics opf2svm opf2lasvm opf2ann bayes assemblegnufile generatetxtfile4gnu svmtorch opf2svmtorch fann 
+all: libopf fann lasvm svm-train svm-predict svm.o svm_linear-train svm_linear-predict tron.o linear.o blas/blas.a mysvm ann-mlp kohonen knn statistics opf2svm opf2lasvm opf2ann bayes assemblegnufile generatetxtfile4gnu svmtorch opf2svmtorch
 
 libopf:
 	$(MAKE) $(OPF_DIR)
+
+fann:
+	cd fann-2.0.0; /bin/bash configure --prefix=$(FANN) --exec-prefix=$(FANN) --program-prefix=$(FANN); make; make install;
+
+lasvm:
+	cd lasvm-source; make;
 
 svm-train: src/svm-train.c src/svm.o
 	$(CXXC) $(FLAGS) src/svm-train.c src/svm.o -o svm-train -lm
@@ -40,7 +45,10 @@ mysvm:
 	$(CC) -w $(FLAGS) $(IFLAGS) src/mysvm.c -L$(OPF_DIR)/lib -o mysvm -lm -lOPF
 
 ann-mlp: src/ann-mlp.c
-	$(CC) $(CFLAGS) $(IFLAGS) src/ann-mlp.c -L$(OPF_DIR)/lib -lOPF $(FANNLIB) -o ann-mlp -lm
+	$(CC) $(CFLAGS) $(IFLAGS) -I$(FANN)/include src/ann-mlp.c -L$(OPF_DIR)/lib -lOPF $(FANN)/lib/libfann.a -o ann-mlp -lm
+
+knn:
+	$(CC) -w $(FLAGS) $(IFLAGS) src/knn.c -L$(OPF_DIR)/lib -lOPF -o knn  -lm
 
 statistics:
 	$(CC) -w $(FLAGS) src/statistics.c -L$(OPF_DIR)/lib -lOPF -o statistics  -lm
@@ -54,9 +62,6 @@ opf2lasvm:
 kohonen:
 	$(CC) -w $(FLAGS) $(IFLAGS) src/kohonen.c -L$(OPF_DIR)/lib -lOPF -o kohonen  -lm
 
-knn:
-	$(CC) -w $(FLAGS) $(IFLAGS) src/knn.c -L$(OPF_DIR)/lib -lOPF -o knn  -lm
-
 opf2ann: 
 	$(CC) -w $(FLAGS) $(IFLAGS) src/opf2ann.c -L$(OPF_DIR)/lib -lOPF -o opf2ann  -lm
 
@@ -68,12 +73,6 @@ assemblegnufile:
 
 generatetxtfile4gnu:
 	$(CC) utils/src/generatetxtfile4gnu.c -o utils/generatetxtfile4gnu
-
-fann:
-	cd fann-2.0.0; /bin/bash configure --prefix=$(PWD) --exec-prefix=$(PWD) --program-prefix=$(PWD); make; make install;
-
-lasvm:
-	cd lasvm-source; make;
 
 opf2svmtorch:
 	$(CC) -w $(FLAGS) $(IFLAGS) src/opf2svmtorch.c -L$(OPF_DIR)/lib -lOPF -o opf2svmtorch  -lm

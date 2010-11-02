@@ -21,7 +21,7 @@ This package is only needed if you intend to develop and/or compile programs bas
 
 %prep
 %setup -q
-./configure --prefix=/home/papa/src/libmachinelearning
+./configure --prefix=/home/papa/src/libmachinelearning/fann-2.0.0
 
 %build
 make
