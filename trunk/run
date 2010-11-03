@@ -31,6 +31,10 @@ do
 		./opf2lasvm training.dat training.lasvm
 		./opf2lasvm testing.dat testing.lasvm
 
+		#converting sets to SVMTorch format *****
+		./opf2svmtorch training.dat training.svmtorch
+		./opf2svmtorch testing.dat testing.svmtorch
+
 		#converting sets to FANN format *****
 		./opf2ann training.dat training.ann
 		./opf2ann testing.dat testing.ann
@@ -71,6 +75,19 @@ do
 		cp testing.dat testing.lasvm
 		opf_accuracy testing.lasvm
 
+		#executing SVMTorch with RBF kernel *****
+		#SVMTorch for binary problems
+		#./SVMTorch/SVMTorch training.svmtorch training.svmtorch.modeltorch
+		#./SVMTorch/SVMTest -oa testing.svmtorch.out training.svmtorch.modeltorch testing.svmtorch
+		#cp testing.dat testing.testing.svmtorch
+		#opf_accuracy testing.lasvm
+
+		#SVMTorch for multiclass problems
+		#./SVMTorch/SVMTorch -multi training.svmtorch training.svmtorch.modeltorch
+		#./SVMTorch/SVMTest -multi -oa testing.svmtorch.out training.svmtorch.modeltorch testing.svmtorch
+		#cp testing.dat testing.testing.svmtorch
+		#opf_accuracy testing.lasvm
+
 		#executing ANN-MLP *****
 		./ann-mlp training.ann testing.ann
 		cp testing.dat testing.ann
@@ -98,7 +115,7 @@ do
 		mv testing.bay.predict testing.bay.out
 		opf_accuracy testing.bay
 
-		#rm *.opf *.svm  *.model *.out *.no-kernel *.ann *.som *.knn *.lasvm *.sigmoid-kernel *.bay
+		rm *.opf *.svm  *.model *.out *.no-kernel *.ann *.som *.knn *.lasvm *.sigmoid-kernel *.bay *.svmtorch *.modeltorch*
 
 		sleep 2
 	done
