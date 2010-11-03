@@ -79,14 +79,15 @@ do
 		#SVMTorch for binary problems
 		#./SVMTorch/SVMTorch training.svmtorch training.svmtorch.modeltorch
 		#./SVMTorch/SVMTest -oa testing.svmtorch.out training.svmtorch.modeltorch testing.svmtorch
+		#mv predict testing.testing.svmtorch.out
 		#cp testing.dat testing.testing.svmtorch
-		#opf_accuracy testing.lasvm
+		#opf_accuracy testing.svmtorch
 
 		#SVMTorch for multiclass problems
 		#./SVMTorch/SVMTorch -multi training.svmtorch training.svmtorch.modeltorch
 		#./SVMTorch/SVMTest -multi -oa testing.svmtorch.out training.svmtorch.modeltorch testing.svmtorch
 		#cp testing.dat testing.testing.svmtorch
-		#opf_accuracy testing.lasvm
+		#opf_accuracy testing.svmtorch
 
 		#executing ANN-MLP *****
 		./ann-mlp training.ann testing.ann
