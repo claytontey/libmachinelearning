@@ -79,7 +79,6 @@ do
 		#SVMTorch for binary problems
 		#./SVMTorch/SVMTorch training.svmtorch training.svmtorch.modeltorch
 		#./SVMTorch/SVMTest -oa testing.svmtorch.out training.svmtorch.modeltorch testing.svmtorch
-		#mv predict testing.testing.svmtorch.out
 		#cp testing.dat testing.testing.svmtorch
 		#opf_accuracy testing.svmtorch
 
