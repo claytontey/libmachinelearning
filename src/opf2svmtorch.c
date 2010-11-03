@@ -9,18 +9,18 @@ void 	WriteSubgraph2SVMTorchFormat(Subgraph *cg, char *file){
 
 	fprintf(fp, "%d ", cg->nnodes);
 	fprintf(fp, "%d\n", cg->nfeats+1);
-	
-	
+
+
 	for(i=0; i < cg->nnodes; i++)
 	{
 		for(j=0; j < cg->nfeats; j++)
 			fprintf(fp,"%f ",cg->node[i].feat[j]);
 		if(cg->node[i].truelabel == 1)
 			fprintf(fp,"%d\n",+1); // Remember +1 or -1
-		else 
+		else
 			fprintf(fp,"%d\n",-1);
-	}	
-	
+	}
+
 	fclose(fp);
 }
 
@@ -39,23 +39,24 @@ void    WriteSubgraph2SVMTorchFormatMC(Subgraph *cg, char *file){
 		for(j=0; j < cg->nfeats; j++)
 			fprintf(fp,"%f ",cg->node[i].feat[j]);
 		fprintf(fp,"%d\n",cg->node[i].truelabel-1); // Remember 0, 1, 2...
-	}																							        fclose(fp);
-																								}
+	}
+	fclose(fp);
+
+}
 
 int main(int argc, char**argv){
-	if(argc != 3 && argc != 4)
-	{
-		fprintf(stderr, "\nusage opf2svmtorch <input libopf file> <output svmtorch file> <nclasses>\n");
+	if(argc != 3){
+		fprintf(stderr, "\nusage opf2svmtorch <input libopf file> <output svmtorch file>\n");
 		exit(-1);
 	}
 
 	Subgraph *g = ReadSubgraph(argv[1]);
-	
-	if (argc==3)
-		WriteSubgraph2SVMTorchFormat(g, argv[2]);
-	else 
-		WriteSubgraph2SVMTorchFormatMC(g, argv[2]);
-	
+
+	if(g->nlabels == 2)
+		WriteSubgraph2SVMTorchFormat(g,argv[2]);
+	else
+		WriteSubgraph2SVMTorchFormatMC(g,argv[2]);
+
 	DestroySubgraph(&g);
 
 	return 0;
