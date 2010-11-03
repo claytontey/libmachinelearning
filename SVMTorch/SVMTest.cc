@@ -418,24 +418,17 @@ int main(int argc, char **argv)
   {
     int missclassified = 0;
     int missclassified_pos = 0;
-    FILE *fp = NULL;
-    fp = fopen("predict","a");
 
     for(int i = 0; i < l; i++)
     {
-      if(y_pred[i]>0)
-   	fprintf(fp,"%d\n",1);
-      else
-        fprintf(fp,"%d\n",2);
-
+      
       if(y[i]*y_pred[i] <= 0)
       {
-	missclassified++;
+		missclassified++;
         if(y[i] < 0)
           missclassified_pos++;
       }
     }
-    fclose(fp);
     
     real z = 100.0 * ((real)missclassified) / ((real)l);
     cout << endl;
@@ -445,6 +438,7 @@ int main(int argc, char **argv)
     z = 100.0 * ((real)(l-missclassified)) / ((real)l);
     cout << "# Number of correct classifications : " << l-missclassified << " ["  << setprecision(4) <<  z << "%]" << endl;
     
+    FILE *fp = NULL;
     fp = fopen("accuracy","a");
     fprintf(fp,"%.2f\%\n",z);
     fclose(fp);
@@ -498,7 +492,14 @@ int main(int argc, char **argv)
   {
     cout << "# Writing results in ASCII" << endl;
     ofstream f( (params.out_file_a).c_str() );
-  	for(int i = 0; i < l; i++)
+    if(!params.regression_mode && !params.multi_mode && params.desired)
+		for(int i = 0; i < l; i++)
+			if(y_pred[i]>0)
+				f << 1 << endl;
+			else
+				f << 2 << endl;
+	else
+		for(int i = 0; i < l; i++)
       		f << y_pred[i]+1 << endl;
   }
 
