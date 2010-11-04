@@ -126,6 +126,7 @@ do
 	./statistics testing.svm.linear.acc training.svm.linear.time testing.svm.linear.time $file.svm.linear.stt $5
 	./statistics testing.svm.sigmoid-kernel.acc training.svm.sigmoid-kernel.time testing.svm.sigmoid-kernel.time $file.svm.sigmoid-kernel.stt $5
 	./statistics testing.lasvm.acc training.lasvm.time testing.lasvm.time $file.lasvm.stt $5
+	./statistics testing.svmtorch.acc training.svmtorch.time testing.svmtorch.time $file.svmtorch.stt $5
 	./statistics testing.ann.acc training.ann.time testing.ann.time $file.ann.stt $5
 	./statistics testing.som.acc training.som.time testing.som.time $file.som.stt $5
 	./statistics testing.knn.acc training.knn.time testing.knn.time $file.knn.stt $5
