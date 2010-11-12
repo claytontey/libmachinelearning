@@ -519,7 +519,7 @@ int main(int argc, char **argv)
   FILE *f = NULL;
   char fileName[64];
 
-  sprintf(fileName,"%s.time",argv[argc-2]);
+  sprintf(fileName,"%s.time",argv[argc-1]);
   f = fopen(fileName,"a");
   fprintf(f,"%f\n",(float)time);
   fclose(f);
