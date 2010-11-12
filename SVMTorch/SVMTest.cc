@@ -520,7 +520,7 @@ int main(int argc, char **argv)
   char fileName[64];
 
   sprintf(fileName,"%s.time",argv[argc-2]);
-  f = fopen("testing.time","a");
+  f = fopen(fileName,"a");
   fprintf(f,"%f\n",(float)time);
   fclose(f);
 
