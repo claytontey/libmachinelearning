@@ -69,19 +69,19 @@ void help(char **argv)
 }
 
 void scan_cmd(int argc, char **argv, parametres *params)
-{  
+{
   int i = 1;
   int erreur;
   int maxa;
-  
+
   if(argc < 3)
     help(argv);
-  
+
   maxa = argc-2;
   while(i < maxa)
   {
     erreur = 1;
-    
+
     if(!strcmp(argv[i], "-help"))
       help(argv);
 
@@ -89,7 +89,7 @@ void scan_cmd(int argc, char **argv, parametres *params)
     {
       params->multi_mode = true;
       erreur = 0;
-    }    
+    }
 
     if(!strcmp(argv[i], "-sparse"))
     {
@@ -111,7 +111,7 @@ void scan_cmd(int argc, char **argv, parametres *params)
       else
         help(argv);
 
-      params->out_ascii = true;      
+      params->out_ascii = true;
       erreur = 0;
     }
 
@@ -123,7 +123,7 @@ void scan_cmd(int argc, char **argv, parametres *params)
       else
         help(argv);
 
-      params->out_binary = true;      
+      params->out_binary = true;
       erreur = 0;
     }
 
@@ -146,11 +146,11 @@ void scan_cmd(int argc, char **argv, parametres *params)
         params->load = atoi(argv[i]);
       else
         help(argv);
-      
+
       erreur = 0;
     }
 
-    i++;    
+    i++;
     if(erreur)
       help(argv);
   }
@@ -159,7 +159,7 @@ void scan_cmd(int argc, char **argv, parametres *params)
 real rabouleIllico(string file_svm, real **data, sreal **sdata, real *y_pred, int l, parametres *params)
 {
   StandardSVM emilie;
-  
+
   emilie.load(file_svm);
 
   if(emilie.regression_mode)
@@ -177,7 +177,7 @@ real rabouleIllico(string file_svm, real **data, sreal **sdata, real *y_pred, in
   cout << "[________Test________]" << endl;
   cout << "                    [";
   cout.flush();
- 
+
   if(params->sparse_mode)
   {
     for(int i = 0; i < l; i++)
@@ -230,7 +230,7 @@ int main(int argc, char **argv)
 
   params.multi_mode = false;
   params.sparse_mode = false;
-  params.bin_mode = false;    
+  params.bin_mode = false;
   params.load = -1;
   params.norm = false;
   params.out_ascii = false;
@@ -285,7 +285,7 @@ int main(int argc, char **argv)
         string sjulie = julie;
         file += sjulie;
       }
-      
+
       ifstream f(file.c_str());
       if(!f)
         break;
@@ -323,7 +323,7 @@ int main(int argc, char **argv)
         string sjulie = julie;
         file += sjulie;
       }
-      
+
       real norm = rabouleIllico(file, data, sdata, y_temp, l, &params);
       if(params.norm)
       {
@@ -346,7 +346,7 @@ int main(int argc, char **argv)
             multi_missclassified[cl]++;
             if(z < 0)
               multi_missclassified_pos[cl]++;
-          }       
+          }
         }
       }
       /////////////////////////////////////////
@@ -378,17 +378,17 @@ int main(int argc, char **argv)
     real mae = 0;
     real mse = 0;
     real msse = 0;
-    
+
     for(int i = 0; i < l; i++)
     {
       real z = y[i] - y_pred[i];
       z = ( (z < 0) ? -z : z);
       if(z < 0)
         z = -z;
-            
+
       if(z > maxe)
         maxe = z;
-      
+
       mae += z;
       z *= z;
       mse += z;
@@ -402,7 +402,7 @@ int main(int argc, char **argv)
       mse /= z;
       msse /= z;
     }
-    
+
     cout << endl;
     cout << "# Mean Absolute Error    : " << mae << endl;
 		cout << "   -> Standard Deviation : " << sqrt(mse-mae*mae) << endl;
@@ -421,7 +421,7 @@ int main(int argc, char **argv)
 
     for(int i = 0; i < l; i++)
     {
-      
+
       if(y[i]*y_pred[i] <= 0)
       {
 		missclassified++;
@@ -429,7 +429,7 @@ int main(int argc, char **argv)
           missclassified_pos++;
       }
     }
-    
+
     real z = 100.0 * ((real)missclassified) / ((real)l);
     cout << endl;
 		cout << "# Number of missclassified          : " << missclassified << " [" << setprecision(4) << z << "%]" << endl;
@@ -437,7 +437,7 @@ int main(int argc, char **argv)
 		cout << "     -> False negatives             : " << missclassified-missclassified_pos << endl;
     z = 100.0 * ((real)(l-missclassified)) / ((real)l);
     cout << "# Number of correct classifications : " << l-missclassified << " ["  << setprecision(4) <<  z << "%]" << endl;
-    
+
     FILE *fp = NULL;
     fp = fopen("accuracy","a");
     fprintf(fp,"%.2f\%\n",z);
@@ -453,7 +453,7 @@ int main(int argc, char **argv)
     for(int i = 0; i < l; i++)
     {
       //fprintf(fp,"%d\n",y_pred[i]);
-      
+
       if(y[i] != y_pred[i])
         missclassified++;
     }
@@ -473,16 +473,16 @@ int main(int argc, char **argv)
     }
     error/=params.n_class;
     cout << endl;
-    
+
     cout << "# With multiclass: " << missclassified << " missclassified [" <<  setprecision(4) << (100. * (real)missclassified / (real)l);
-    cout << "%] on " << l << " examples" << endl;    
-    
+    cout << "%] on " << l << " examples" << endl;
+
     fp = fopen("accuracy","a");
     fprintf(fp,"%.2f\%\n",100 - error);
     fclose(fp);
     delete[] multi_missclassified;
     delete[] multi_missclassified_pos;
-  }  
+  }
   cout << endl;
 
   // Sauvegardes diverses...
@@ -509,18 +509,21 @@ int main(int argc, char **argv)
     ofstream f( (params.out_file_b).c_str() );
     f.write((char *)y_pred, sizeof(real)*l);
   }
-  
+
   gettimeofday(&toc,NULL);
   float time = ((toc.tv_sec-tic.tv_sec)*1000.0 + (toc.tv_usec-tic.tv_usec)*0.001)/1000.0;
   cout << endl;
   cout << "# Total time in CPU-seconds = " << time  << endl;
   cout << endl;
-  
+
   FILE *f = NULL;
+  char fileName[64];
+
+  sprintf(fileName,"%s.time",argv[argc-2]);
   f = fopen("testing.time","a");
   fprintf(f,"%f\n",(float)time);
   fclose(f);
-  
+
   return(0);
 }
 
