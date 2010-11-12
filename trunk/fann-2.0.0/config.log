@@ -717,7 +717,6 @@ config.status:754: creating src/include/Makefile
 config.status:754: creating fann.pc
 config.status:754: creating fann.spec
 config.status:820: creating src/include/config.h
-config.status:934: src/include/config.h is unchanged
 config.status:1114: executing depfiles commands
 
 ## ---------------- ##
