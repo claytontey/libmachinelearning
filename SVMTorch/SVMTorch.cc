@@ -108,19 +108,19 @@ void help(char **argv, parametres *params)
 }
 
 void scan_cmd(int argc, char **argv, parametres *params)
-{  
+{
   int i = 1;
   int erreur;
   int maxa;
-  
+
   if(argc < 3)
     help(argv, params);
-  
+
   maxa = argc-2;
   while(i < maxa)
   {
     erreur = 1;
-    
+
     if(!strcmp(argv[i], "-help"))
       help(argv, params);
 
@@ -128,7 +128,7 @@ void scan_cmd(int argc, char **argv, parametres *params)
     {
       params->multi_mode = true;
       erreur = 0;
-    }    
+    }
 
     if(!strcmp(argv[i], "-mfc"))
     {
@@ -137,7 +137,7 @@ void scan_cmd(int argc, char **argv, parametres *params)
         params->first_class = atoi(argv[i]);
       else
         help(argv, params);
-      
+
       erreur = 0;
     }
 
@@ -148,7 +148,7 @@ void scan_cmd(int argc, char **argv, parametres *params)
         params->last_class = atoi(argv[i]);
       else
         help(argv, params);
-      
+
       erreur = 0;
     }
 
@@ -165,7 +165,7 @@ void scan_cmd(int argc, char **argv, parametres *params)
         params->c = argv[i];
       else
         help(argv, params);
-      
+
       erreur = 0;
     }
 
@@ -176,7 +176,7 @@ void scan_cmd(int argc, char **argv, parametres *params)
         params->eps_regression = argv[i];
       else
         help(argv, params);
-      
+
       erreur = 0;
     }
 
@@ -193,7 +193,7 @@ void scan_cmd(int argc, char **argv, parametres *params)
         params->kernel_type = atoi(argv[i]);
       else
         help(argv, params);
-      
+
       erreur = 0;
     }
 
@@ -204,7 +204,7 @@ void scan_cmd(int argc, char **argv, parametres *params)
         params->d = atoi(argv[i]);
       else
         help(argv, params);
-      
+
       erreur = 0;
     }
 
@@ -215,7 +215,7 @@ void scan_cmd(int argc, char **argv, parametres *params)
         params->std = atof(argv[i]);
       else
         help(argv, params);
-      
+
       erreur = 0;
     }
 
@@ -226,7 +226,7 @@ void scan_cmd(int argc, char **argv, parametres *params)
         params->s = atof(argv[i]);
       else
         help(argv, params);
-      
+
       erreur = 0;
     }
 
@@ -237,7 +237,7 @@ void scan_cmd(int argc, char **argv, parametres *params)
         params->r = atof(argv[i]);
       else
         help(argv, params);
-      
+
       erreur = 0;
     }
 
@@ -248,7 +248,7 @@ void scan_cmd(int argc, char **argv, parametres *params)
         params->u = argv[i];
       else
         help(argv, params);
-      
+
       erreur = 0;
     }
 
@@ -259,7 +259,7 @@ void scan_cmd(int argc, char **argv, parametres *params)
         params->cache_size = argv[i];
       else
         help(argv, params);
-      
+
       erreur = 0;
     }
 
@@ -270,10 +270,10 @@ void scan_cmd(int argc, char **argv, parametres *params)
         params->eps_fin = argv[i];
       else
         help(argv, params);
-      
+
       erreur = 0;
     }
-    
+
     if(!strcmp(argv[i], "-h"))
     {
       i++;
@@ -281,7 +281,7 @@ void scan_cmd(int argc, char **argv, parametres *params)
         params->h = argv[i];
       else
         help(argv, params);
-      
+
       erreur = 0;
     }
 
@@ -292,7 +292,7 @@ void scan_cmd(int argc, char **argv, parametres *params)
         params->eps_shrink = argv[i];
       else
         help(argv, params);
-      
+
       erreur = 0;
     }
 
@@ -303,7 +303,7 @@ void scan_cmd(int argc, char **argv, parametres *params)
         params->eps_bornes = argv[i];
       else
         help(argv, params);
-      
+
       erreur = 0;
     }
 
@@ -314,7 +314,7 @@ void scan_cmd(int argc, char **argv, parametres *params)
         params->n_max_unshrink = argv[i];
       else
         help(argv, params);
-      
+
       erreur = 0;
     }
 
@@ -337,11 +337,11 @@ void scan_cmd(int argc, char **argv, parametres *params)
         params->load = atoi(argv[i]);
       else
         help(argv, params);
-      
+
       erreur = 0;
     }
 
-    i++;    
+    i++;
     if(erreur)
       help(argv, params);
   }
@@ -365,20 +365,20 @@ void carbure(real **data, sreal **sdata, real *y, int l, int c, parametres *para
   }
 
   StandardSVM estelle;
-  
+
   estelle.setOption("regression_mode", params->regression_mode);
   estelle.setOption("C", params->c);
   estelle.setOption("eps_regression", params->eps_regression);
   estelle.setOption("unshrink_mode", params->unshrink_mode);
   estelle.setOption("n_max_unshrink", params->n_max_unshrink);
-  
+
   estelle.setOption("cache_size_meg", params->cache_size);
   estelle.setOption("eps_fin", params->eps_fin);
   estelle.setOption("n_iter_min_to_shrink", params->h);
   estelle.setOption("eps_shrink", params->eps_shrink);
   estelle.setOption("eps_bornes", params->eps_bornes);
   estelle.setOption("sparse_mode", params->sparse_mode);
-  
+
   // Le kernel [Genre de truc a setter apres le svm]
   Kernel *delphine;
   switch(params->kernel_type)
@@ -406,7 +406,7 @@ void carbure(real **data, sreal **sdata, real *y, int l, int c, parametres *para
       cout << "$ What's this kernel ?!\n\n";
       exit(0);
   }
-  
+
   estelle.train(data, sdata, y, l, c);
   estelle.save(file_out, comment);
 }
@@ -441,7 +441,7 @@ int main(int argc, char **argv)
   params.eps_bornes = "1E-4";
 #endif
   params.sparse_mode = "0";
-  params.bin_mode = false;    
+  params.bin_mode = false;
   params.load = -1;
 
   scan_cmd(argc, argv, &params);
@@ -478,7 +478,7 @@ int main(int argc, char **argv)
       cout << "$ RhhAHHhaa. Multiclass = multi + CLASS !!!\n" << endl;
       exit(0);
     }
-  
+
     cout << "# Scanning for classes...";
     cout.flush();
     int n_class = -1;
@@ -489,7 +489,7 @@ int main(int argc, char **argv)
     }
     n_class++;
     cout << n_class << " classes found" << endl;
-    
+
     if( (params.first_class < 0) || (params.first_class >= n_class) )
       params.first_class = 0;
     if( (params.last_class < 0) || (params.last_class >= n_class) )
@@ -498,7 +498,7 @@ int main(int argc, char **argv)
       params.last_class = params.first_class;
 
     //long t_debut = getRuntime();
-    
+
     gettimeofday(&tic,NULL);
     real *y_temp = new real[l];
     for(int cl = params.first_class; cl <= params.last_class; cl++)
@@ -526,14 +526,14 @@ int main(int argc, char **argv)
       carbure(data, sdata, y_temp, l, c, &params, file_out, comment);
     }
 
-    //long t_fin = getRuntime();    
-    
+    //long t_fin = getRuntime();
+
     gettimeofday(&toc,NULL);
     float time = ((toc.tv_sec-tic.tv_sec)*1000.0 + (toc.tv_usec-tic.tv_usec)*0.001)/1000.0;
     cout << endl;
     cout << "# Total time in CPU-seconds = " << time  << endl;
 
-    
+
     delete[] y_temp;
   }
   else
@@ -542,9 +542,12 @@ int main(int argc, char **argv)
   float time = ((toc.tv_sec-tic.tv_sec)*1000.0 + (toc.tv_usec-tic.tv_usec)*0.001)/1000.0;
   cout << endl;
   cout << "# Total time in CPU-seconds = " << time  << endl;
-  
+
   FILE *f = NULL;
-  f = fopen("training.time","a");
+  char fileName[64];
+
+  sprintf(fileName,"%s.time",argv[1]);
+  f = fopen(fileName,"a");
   fprintf(f,"%f\n",(float)time);
   fclose(f);
   return(0);
